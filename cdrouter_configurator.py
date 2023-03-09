@@ -2,6 +2,7 @@ import pandas as pd
 import sys
 from datetime import date
 from cdrouter import CDRouter
+from cdrouter.configs import Testvar
 from cdrouter.configs import Config
 
 # get the DUT parameters from the csv file
@@ -38,7 +39,7 @@ input_options = {
     "Users": {
         "parameter": "Users",
         "options": {"1": "SINGLE", "2": "MULTI"},
-        "input_value": "SINGLE"
+        "input_value": "1"
     },
     "IPv6": {
         "parameter": "IPv6",
@@ -143,15 +144,23 @@ Reboot = input_options["Reboot"]["input_value"]
 if Reboot == "No":
     testvars["RestartDut"] = ""
 
+#set testvar for number of clients
+Num_Clients = input_options["Users"]["input_value"]
+if Num_Clients == "SINGLE":
+    testvars["lan2.lanClients"] = "1"
+else:
+    testvars["lan2.lanClients"] = "32"
+
+
 
 config_name = "Python_"
 config_name = config_name + input_options['DUT']['input_value'] + "_"
 config_name = config_name + input_options['WAN Type']['input_value'] + "_"
 config_name = config_name + input_options['WAN Mode']['input_value'] + "_"
 config_name = config_name + input_options['Topology']['input_value'] + "_"
-config_name = config_name + input_options['Users']['input_value'] + "_"
+config_name = config_name + input_options['Users']['input_value']
 if input_options['IPv6']['input_value'] == "Yes":
-    config_name = config_name + "IPv6"
+    config_name = config_name + "_IPv6"
 if input_options['Reboot']['input_value'] == "No":
     config_name = config_name + " (NO REBOOT)"
 
@@ -161,45 +170,30 @@ print(config_name)
 
 base = "http://broadbandlab.ddns.net:81"
 token = "d1b9f0dd"
-# create service
+# create servicei
+
+print("Connecting to CDRouter on " + base)
 c = CDRouter(base, token=token)
 
-cfg = c.configs.create(Config(
-    name=config_name + str(date.today()),
-    contents=f"""
-
-testvar RestartDut 	    	{testvars['RestartDut']} 
-testvar lanInterface 		{testvars['lan.lanInterface']}
-testvar lan.lanClients		{testvars['RestartDut']}
-testvar lan.lanInterface	{testvars['lan.lanInterface']}
-testvar lan2.lanBSSID		{testvars['lan2.lanBSSID']}
-testvar lan2.lanChannel		{testvars['lan2.lanChannel']}
-testvar lan2.lanClients		{testvars['lan2.lanClients']}
-testvar lan2.lanInterface	{testvars['lan2.lanInterface']}
-testvar lan2.lanSSID		{testvars['lan2.lanSSID']}
-testvar lan2.wpaKey 		{testvars['lan2.wpaKey']}
-testvar lan3.lanBSSID		{testvars['lan3.lanBSSID']}
-testvar lan3.lanChannel		{testvars['lan3.lanChannel']}
-testvar lan3.lanClients		{testvars['lan3.lanClients']}
-testvar lan3.lanInterface	{testvars['lan3.lanInterface']}
-testvar lan3.lanSSID		{testvars['lan3.lanSSID']}
-testvar lan3.wpaKey		    {testvars['lan3.wpaKey']}
-testvar pppoeUser	    	{testvars['pppoeUser']}
-testvar pppoePassword		{testvars['pppoePassword']}
-testvar RestartDutDelay		{testvars['RestartDutDelay']}
-testvar wanInterface		{testvars['wanInterface']}
-testvar wanMode		    	{testvars['wanMode']}
-testvar wanVlanId		    {testvars['wanVlanId']}
-testvar supportsIPv6		{testvars['supportsIPv6']}
-
-#testvar_group.lan2	    	{testvars['RestartDut']}
-#testvar_group.lan3  		{testvars['RestartDut']}
-
-"""))
-
-print('New config has ID {}'.format(cfg.id))
-
 cfg_default = c.configs.get(1072)
-print(cfg_default.name)
-testvar_edit = cfg_default.edit_testvar(1072,wanVlanId)
-print(testvar_edit)
+config_name = cfg_default.name
+config_desc = cfg_default.description
+config_notes = cfg_default.note
+
+print("Updating config notes...")
+config_notes = config_name + " - " + str(date.today()) + "\n" + config_notes
+c.configs.edit(Config(id='1072', note=config_notes))
+
+print("Updating testvars...")
+c.configs.edit_testvar("1072", Testvar(name='wanInterface', value=testvars['wanInterface']))
+c.configs.edit_testvar("1072", Testvar(name='wanMode', value=testvars['wanMode']))
+c.configs.edit_testvar("1072", Testvar(name='RestartDut', value=testvars['RestartDut']))
+c.configs.edit_testvar("1072", Testvar(name='supportsIPv6', value=testvars['supportsIPv6']))
+c.configs.edit_testvar("1072", Testvar(name='lanInterface', value=testvars['lan.lanInterface']))
+c.configs.edit_testvar("1072", Testvar(name='lanSSID', group="lan2", value=testvars['lan2.lanSSID']))
+c.configs.edit_testvar("1072", Testvar(name='lanSSID', group="lan3", value=testvars['lan2.lanSSID']))
+c.configs.edit_testvar("1072", Testvar(name='wpaKey', group="lan2", value=testvars['lan2.wpaKey']))
+c.configs.edit_testvar("1072", Testvar(name='wpaKey', group="lan3", value=testvars['lan2.wpaKey']))
+c.configs.edit_testvar("1072", Testvar(name='lanClients', group="lan2", value=testvars['lan2.lanClients']))
+
+print("Finished!")
