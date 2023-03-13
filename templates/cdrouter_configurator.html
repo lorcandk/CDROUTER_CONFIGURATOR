@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CDRouter Configurator</title>
+</head>
+<body>
+    <form method="POST">
+        <label for="options">Select an option:</label>
+        <select name="options" id="options">
+            {% for option in options %}
+            <option value="{{ option }}">{{ option }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
+
