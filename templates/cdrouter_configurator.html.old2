@@ -6,14 +6,19 @@
 <body>
 <form method="POST">
 <p><b>SELECT TEST OPTIONS</b>
-{% for category, items in options.items() %}
-<p>{{ category }}
-<select name="{{ category }}">
+  <select name="options">
+    {% for category, items in options.items() %}
+      <optgroup label="{{ category }}">
       {% for key, value in items.items() %}
         <option value="{{ key }}">{{ value }}</option>
       {% endfor %}
-</select>
-{% endfor %}
+      <optgroup label="{{ category }}">
+      {% for key, value in items.items() %}
+        <option value="{{ key }}">{{ value }}</option>
+      {% endfor %}
+      </optgroup>
+    {% endfor %}
+  </select>
   <!-- add more dropdown lists for other options as needed -->
   <p>
   <input type="submit" value="Submit">
