@@ -4,19 +4,19 @@
     <title>CDRouter Configurator</title>
 </head>
 <body>
-<form method="POST">
+<form method="POST" onsubmit="submit.disabled=true; return true;">
 <p><b>SELECT TEST OPTIONS</b>
 {% for category, items in options.items() %}
 <p>{{ category }}
 <select name="{{ category }}">
       {% for key, value in items.items() %}
-        <option value="{{ key }}">{{ value }}</option>
+        <option value="{{ value }}">{{ value }}</option>
       {% endfor %}
 </select>
 {% endfor %}
   <!-- add more dropdown lists for other options as needed -->
   <p>
-  <input type="submit" value="Submit">
+  <input type="submit" name="submit" value="Submit">
 </form>
 </body>
 </html>
