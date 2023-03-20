@@ -168,16 +168,17 @@ def cdrouter_configurator():
         if selected_options['Reboot'] == "No":
             config_name = config_name + " (NO REBOOT)"
 
-        print(f"Generating config {config_name}")
+        print(f"Config {config_name}")
 
-# generate the config file on CDRouter
+# connect to CDRouter
+        print(f"Opening connection to CDRouter...")
         base = "http://broadbandlab.ddns.net:81"
         token = "d1b9f0dd"
-# connect to CDRouter
         c = CDRouter(base, token=token)
-# get dfault config
+# get default config
         cfg_default = c.configs.get(1072)
 #update config notes
+        print(f"Updating notes in {cfg_default.name} ...")
         config_notes = cfg_default.note
         config_notes = config_name + " - " + str(date.today()) + " - " +  config_notes
         c.configs.edit(Config(id='1072', note=config_notes))
@@ -190,10 +191,10 @@ def cdrouter_configurator():
         try:
             dut_device = c.devices.get_by_name(dut_name)
             if dut_device is not None:
-                print(f"Device {dut_name} exists")
+                print(f"Device {dut_name} exists.")
         except:
             dut_device = c.devices.create(Device(name=dut_name))
-            print(f"Device {dut_name} created")
+            print(f"Device {dut_name} created.")
 
 # update testvar
         print("Updating testvars...")
@@ -228,8 +229,31 @@ def cdrouter_configurator():
         c.configs.edit_testvar("1072", Testvar(name='lanSecurity', group='lan3', value=testvars['lan3.lanSecurity']))
 
         print("Finished updating testvars.")
-        print("Launching test package...")
+
+### set package associated device name        
         pkg = c.packages.get(1056)
+#        pkg_device_id = c.devices.get(pkg.device_id)
+#        print(f"Package current device id: {pkg.device_id}")
+#        pkg_dvc = c.devices.get(pkg.device_id)
+#        print(f"Package current device name: {pkg_dvc.name}")
+ #      dvc = c.devices.get_by_name(device_name)
+        print(f"DUT Device id: {dut_device.id}")
+        print(f"DUT Device name: {dut_device.name}")
+
+        pkg_base = c.packages.get(808)
+        print(f"Base test package has {pkg_base.test_count} tests")
+ #       print(f"{pkg_base.testlist}")
+        tl_base = pkg_base.testlist 
+
+        pkg_sec = c.packages.get(825)
+        print(f"Security test package has {pkg_sec.test_count} tests")
+#        print(f"{pkg_sec.testlist}")
+        tl_sec = pkg_sec.testlist 
+
+        tl = tl_base + tl_sec
+
+        print(f"Updating package {pkg.name} with device {dut_device.name} and adding testlists...")
+        c.packages.edit(Package(id='1056', device_id=dut_device.id, testlist=tl))
         print('Checking config for errors...')
         check = c.configs.check_config(cfg_default.contents)
         if len(check.errors) > 0:
@@ -238,35 +262,11 @@ def cdrouter_configurator():
                 print('        {0}'.format(e.error))
                 print('')
                 continue
-
-### set package associated device name        
-        pkg = c.packages.get(1056)
-        pkg_device_id = c.devices.get(pkg.device_id)
-        print(f"Package current device id: {pkg.device_id}")
-        pkg_dvc = c.devices.get(pkg.device_id)
-        print(f"Package current device name: {pkg_dvc.name}")
- #      dvc = c.devices.get_by_name(device_name)
-        print(f"DUT Device id: {dut_device.id}")
-        print(f"DUT Device name: {dut_device.name}")
-#       print("Associating device...")
-
-        pkg_base = c.packages.get(808)
-        print(f"Base test package has {pkg_base.test_count} tests")
-        print(f"{pkg_base.testlist}")
-        tl_base = pkg_base.testlist 
-
-        pkg_sec = c.packages.get(825)
-        print(f"Security test package has {pkg_sec.test_count} tests")
-        print(f"{pkg_sec.testlist}")
-        tl_sec = pkg_sec.testlist 
-
-        tl = tl_base + tl_sec
-
         print(f"Launching package {pkg.name} with associated device {dut_device.name}...")
-        c.packages.edit(Package(id='1056', device_id=dut_device.id, testlist=tl))
-        j = c.jobs.launch(Job(package_id=1056))
+        j = c.jobs.launch(Job(package_id='1056'))
 
 # working for job to be assigned a result ID
+        print("Running startup procedure. This may take a few minutes...")
         while j.result_id is None:
             time.sleep(1)
             j = c.jobs.get(j.id)
