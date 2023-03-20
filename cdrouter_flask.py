@@ -8,11 +8,11 @@ from cdrouter.configs import Testvar
 from cdrouter.configs import Config
 from cdrouter.jobs import Job
 from cdrouter.devices import Device
+from cdrouter.packages import Package
 
 # get the DUT parameters from the csv file
 DUT_parameters = pd.read_csv('/home/lorcan/CDROUTER_CONFIGURATOR/DUT_parameters.csv')
 DUT_parameters_indexed = DUT_parameters.set_index('DUT')
-
 # create the web page
 app = Flask(__name__)
 
@@ -73,7 +73,7 @@ def cdrouter_configurator():
 # Get the DUT parameters
         DUT =selected_options["DUT"]
         DUT_dict = DUT_parameters_indexed.loc[:, DUT].to_dict()
-        print(DUT_dict)
+#        print(DUT_dict)
 # set testvars for the DUT
         testvars["RestartDut"] = "/home/qacafe/powercycle.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
         testvars["lan.lanInterface"] = DUT_dict["LAN"]
@@ -183,12 +183,18 @@ def cdrouter_configurator():
         c.configs.edit(Config(id='1072', note=config_notes))
 
 # create device
-        device_name = DUT_dict["GW-MODEL"] + "_" + DUT_dict["GW-FIRMWARE"]
+        dut_name = DUT_dict['GW-VENDOR'] + "_" + DUT_dict["GW-MODEL"] + "_" + DUT_dict["GW-FIRMWARE"]
         if selected_options['Topology'] == "MESH":
-            device_name = device_name + "_" + DUT_dict["AP-FIRMWARE"]
-        device_name = device_name + DUT_dict["GW-FIRMWARE"]
-        dut_device = c.devices.create(Device(name=device_name))
-        
+            dut_name = dut_name + "_" + DUT_dict["AP-MODEL"] + "_" + DUT_dict["AP-FIRMWARE"]
+
+        try:
+            dut_device = c.devices.get_by_name(dut_name)
+            if dut_device is not None:
+                print(f"Device {dut_name} exists")
+        except:
+            dut_device = c.devices.create(Device(name=dut_name))
+            print(f"Device {dut_name} created")
+
 # update testvar
         print("Updating testvars...")
         c.configs.edit_testvar("1072", Testvar(name='wanInterface', value=testvars['wanInterface']))
@@ -223,8 +229,8 @@ def cdrouter_configurator():
 
         print("Finished updating testvars.")
         print("Launching test package...")
-        print('Checking config for errors...')
         pkg = c.packages.get(1056)
+        print('Checking config for errors...')
         check = c.configs.check_config(cfg_default.contents)
         if len(check.errors) > 0:
             print('config errors:'.format(pkg.name))
@@ -232,15 +238,38 @@ def cdrouter_configurator():
                 print('        {0}'.format(e.error))
                 print('')
                 continue
-# launch package
-        print('Launching package...')
+
+### set package associated device name        
+        pkg = c.packages.get(1056)
+        pkg_device_id = c.devices.get(pkg.device_id)
+        print(f"Package current device id: {pkg.device_id}")
+        pkg_dvc = c.devices.get(pkg.device_id)
+        print(f"Package current device name: {pkg_dvc.name}")
+ #      dvc = c.devices.get_by_name(device_name)
+        print(f"DUT Device id: {dut_device.id}")
+        print(f"DUT Device name: {dut_device.name}")
+#       print("Associating device...")
+
+        pkg_base = c.packages.get(808)
+        print(f"Base test package has {pkg_base.test_count} tests")
+        print(f"{pkg_base.testlist}")
+        tl_base = pkg_base.testlist 
+
+        pkg_sec = c.packages.get(825)
+        print(f"Security test package has {pkg_sec.test_count} tests")
+        print(f"{pkg_sec.testlist}")
+        tl_sec = pkg_sec.testlist 
+
+        tl = tl_base + tl_sec
+
+        print(f"Launching package {pkg.name} with associated device {dut_device.name}...")
+        c.packages.edit(Package(id='1056', device_id=dut_device.id, testlist=tl))
         j = c.jobs.launch(Job(package_id=1056))
 
 # working for job to be assigned a result ID
         while j.result_id is None:
             time.sleep(1)
             j = c.jobs.get(j.id)
-        
 
         print('        Result-ID: {0}'.format(j.result_id))
         print('')
