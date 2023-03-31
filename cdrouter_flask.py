@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from flask_basicauth import BasicAuth
 import pandas as pd
 import sys
 import time
@@ -15,6 +16,12 @@ DUT_parameters = pd.read_csv('/home/lorcan/CDROUTER_CONFIGURATOR/DUT_parameters.
 DUT_parameters_indexed = DUT_parameters.set_index('DUT')
 # create the web page
 app = Flask(__name__)
+
+app.config['BASIC_AUTH_USERNAME'] = 'bblab'
+app.config['BASIC_AUTH_PASSWORD'] = 'e1rc0mbblab'
+app.config['BASIC_AUTH_FORCE'] = True
+
+basic_auth = BasicAuth(app)
 
 # Define a dict to store the options
 options = { "DUT": {"1": "DUT1", "2": "DUT2", "3": "DUT3", "4": "DUT4"},
@@ -66,6 +73,7 @@ testvars = {
 
 
 @app.route('/cdrouter_configurator', methods=['GET', 'POST'])
+@basic_auth.required
 def cdrouter_configurator():
     if request.method == 'POST' :
         selected_options=request.form
