@@ -1,0 +1,22 @@
+DUT,DUT1,DUT2,DUT3,DUT4,DUT5,DUT6,DUT7,DUT8
+AP-FIRMWARE,v946,v946,xxx,xxx,xxx,xxx,xxx,xxx
+AP-MAC,46:D4:54:FD:FF:6C,xxx,xxx,xxx,xxx,xxx,xxx,xxx
+AP-MAC-2G,46:D4:54:FD:FF:6C,xxx,xxx,xxx,xxx,xxx,xxx,xxx
+AP-MAC-5G,46:D4:54:FD:FF:6D,xxx,xxx,xxx,xxx,xxx,xxx,xxx
+AP-MODEL,xxx,xxx,xxx,xxx,xxx,xxx,xxx,xxx
+AP-VENDOR,xxx,xxx,xxx,xxx,xxx,xxx,xxx,xxx
+DESCRIPTION,Retail F3000,Retail F3500,xxx,xxx,xxx,xxx,xxx,xxx
+GW-FIRMWARE,109E,xxx,xxx,xxx,xxx,xxx,xxx,xxx
+GW-MAC,10:06:45:64:8c:20,3C:58:5D:D4:B5:80,xxx,xxx,xxx,xxx,xxx,xxx
+GW-MAC-2G,10:06:45:64:8c:2a,3c:58:5d:d4:b5:84,xxx,xxx,xxx,xxx,xxx,xxx
+GW-MAC-5G,10:06:45:64:8c:2b,3c:58:5d:d4:b5:85,xxx,xxx,xxx,xxx,xxx,xxx
+GW-MODEL,xxx,xxx,xxx,xxx,xxx,xxx,xxx,xxx
+GW-SERIAL,N7201095U000133,xxx,xxx,xxx,xxx,xxx,xxx,xxx
+GW-VENDOR,xxx,xxx,xxx,xxx,xxx,xxx,xxx,xxx
+GE-WAN,eth4,eth3,xxx,xxx,xxx,xxx,xxx,xxx
+LAN,eth4,eth7,xxx,xxx,xxx,xxx,xxx,xxx
+PDU,2,3,xxx,xxx,xxx,xxx,xxx,xxx
+SSID-2G,eir97979836,eir43912255,xxx,xxx,xxx,xxx,xxx,xxx
+SSID-5G,eir97979836,eir43912255,xxx,xxx,xxx,xxx,xxx,xxx
+VLAN,10,10,xxx,xxx,xxx,xxx,xxx,xxx
+WPA,P82TsSfcvN,F8jeGx98gC,xxx,xxx,xxx,xxx,xxx,xxx

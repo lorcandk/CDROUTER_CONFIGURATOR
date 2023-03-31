@@ -12,7 +12,7 @@ from cdrouter.devices import Device
 from cdrouter.packages import Package
 
 # get the DUT parameters from the csv file
-DUT_parameters = pd.read_csv('/home/lorcan/CDROUTER_CONFIGURATOR/DUT_parameters.csv')
+DUT_parameters = pd.read_csv('~/CDROUTER_CONFIGURATOR/cdrouter_DUT.csv')
 DUT_parameters_indexed = DUT_parameters.set_index('DUT')
 # create the web page
 app = Flask(__name__)
@@ -24,7 +24,7 @@ app.config['BASIC_AUTH_FORCE'] = True
 basic_auth = BasicAuth(app)
 
 # Define a dict to store the options
-options = { "DUT": {"1": "DUT1", "2": "DUT2", "3": "DUT3", "4": "DUT4"},
+options = { "DUT": {"1": "DUT1", "2": "DUT2", "3": "DUT3", "4": "DUT4", "5": "DUT5", "6": "DUT6", "7": "DUT7", "8": "DUT8"},
             "WAN Type": {"1": "VDSL", "2": "GE-WAN"},
             "WAN Mode": {"1": "DHCP", "2": "PPPoE"},
             "Topology": {"1": "GATEWAY", "2": "MESH"},
@@ -179,9 +179,14 @@ def cdrouter_configurator():
         print(f"Config {config_name}")
 
 # connect to CDRouter
-        print(f"Opening connection to CDRouter...")
-        base = "http://broadbandlab.ddns.net:81"
-        token = "d1b9f0dd"
+
+#        base = "http://broadbandlab.ddns.net:81"
+#        token = "d1b9f0dd"
+        base = sys.argv[1]
+        token = sys.argv[2]
+
+        print(f"Opening connection to CDRouter {base}...")
+
         c = CDRouter(base, token=token)
 # get default config
         cfg_default = c.configs.get(1072)
