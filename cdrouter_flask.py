@@ -83,7 +83,7 @@ def cdrouter_configurator():
         DUT_dict = DUT_parameters_indexed.loc[:, DUT].to_dict()
 #        print(DUT_dict)
 # set testvars for the DUT
-        testvars["RestartDut"] = "/home/qacafe/powercycle.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
+#        testvars["RestartDut"] = "/home/qacafe/powercycle.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
         testvars["lan.lanInterface"] = DUT_dict["LAN"]
         testvars["lan2.lanSSID"] = DUT_dict["SSID-5G"]
         testvars["lan.wpaKey"] = DUT_dict["WPA"]
@@ -101,8 +101,12 @@ def cdrouter_configurator():
 
         if WAN_Type == "VDSL":
             testvars["wanInterface"] = "eth5"
+            # shutdown all CPE and start the DUT and DSLAM
+            testvars["RestartDut"] = "/home/qacafe/powercycle_VDSL.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
         elif WAN_Type == "GE-WAN":
             testvars["wanInterface"] = DUT_dict["GE-WAN"]
+            # shutdown all CPE and DSLAM and start the DUT
+            testvars["RestartDut"] = "/home/qacafe/powercycle_GE-WAN.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
         else:
             print("ERROR")
 
