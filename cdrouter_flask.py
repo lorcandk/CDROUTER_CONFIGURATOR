@@ -175,7 +175,8 @@ def cdrouter_configurator():
             config_name = config_name + "_CWMP"
         if selected_options['Reboot'] == "No":
             config_name = config_name + " (NO REBOOT)"
-
+        if len(selected_options['notes']) > 0:
+            config_name = config_name + " " + selected_options['notes']
         print(f"Config {config_name}")
 
 # connect to CDRouter
@@ -183,7 +184,7 @@ def cdrouter_configurator():
         base = sys.argv[1]
         token = sys.argv[2]
 
-        print(f"Opening connection to CDRouter {base}...")
+        print(f"Opening connection to CDRouter {base} with token {token}...")
 
         c = CDRouter(base, token=token)
 # get default config
@@ -191,7 +192,7 @@ def cdrouter_configurator():
 #update config notes
         print(f"Updating notes in {cfg_default.name} ...")
         config_notes = cfg_default.note
-        config_notes = config_name + " - " + str(date.today()) + " - " +  config_notes
+        config_notes = config_name + " - " + str(date.today()) + "\n" + config_notes
         c.configs.edit(Config(id='1072', note=config_notes))
 
 # create device
