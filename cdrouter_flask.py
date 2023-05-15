@@ -180,8 +180,6 @@ def cdrouter_configurator():
 
 # connect to CDRouter
 
-#        base = "http://broadbandlab.ddns.net:81"
-#        token = "d1b9f0dd"
         base = sys.argv[1]
         token = sys.argv[2]
 
