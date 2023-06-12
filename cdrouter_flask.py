@@ -205,6 +205,7 @@ def cdrouter_configurator():
 
 # create device
         dut_name = DUT_dict['GW-VENDOR'] + "_" + DUT_dict["GW-MODEL"] + "_" + DUT_dict["GW-FIRMWARE"]
+        dut_description = "Created by Python"
         if selected_options['Topology'] == "MESH":
             dut_name = dut_name + "_" + DUT_dict["AP-MODEL"] + "_" + DUT_dict["AP-FIRMWARE"]
 
@@ -213,7 +214,7 @@ def cdrouter_configurator():
             if dut_device is not None:
                 print(f"Device {dut_name} exists.")
         except:
-            dut_device = c.devices.create(Device(name=dut_name))
+            dut_device = c.devices.create(Device(name=dut_name, description=dut_description))
             print(f"Device {dut_name} created.")
 
 # update testvar
