@@ -24,7 +24,7 @@ app.config['BASIC_AUTH_FORCE'] = True
 basic_auth = BasicAuth(app)
 
 # Define a dict to store the options
-options = { "DUT": {"1": "DUT1", "2": "DUT2", "3": "DUT3", "4": "DUT4", "5": "DUT5", "6": "DUT6", "7": "DUT7", "8": "DUT8"},
+options = { "DUT": {"1": "DUT1", "2": "DUT2", "3": "DUT3", "4": "DUT4", "5": "DUT5", "6": "DUT6"},
             "WAN Type": {"1": "VDSL", "2": "GE-WAN"},
             "WAN Mode": {"1": "DHCP", "2": "PPPoE"},
             "Topology": {"1": "GATEWAY", "2": "MESH"},
@@ -44,30 +44,30 @@ testvars = {
     "lan.wpaKey":           "",
     "lan.lanChannel":       "",
     "lan2.lanBSSID":        "",
-    "lan2.lanChannel":      "5GHz",
-    "lan2.lanClients":      "1",
-    "lan2.lanInterface":    "wifi0-acn",
+    "lan2.lanChannel":      "",
+    "lan2.lanClients":      "",
+    "lan2.lanInterface":    "",
     "lan2.lanSSID":         "",
     "lan2.wpaKey":          "",
     "lan2.lanChannel":      "",
     "lan3.lanBSSID":        "",
-    "lan3.lanChannel":      "2.4GHz",
-    "lan3.lanClients":      "1",
-    "lan3.lanInterface":    "wifi1-ax",
+    "lan3.lanChannel":      "",
+    "lan3.lanClients":      "",
+    "lan3.lanInterface":    "",
     "lan3.lanSSID":         "",
     "lan3.wpaKey":          "",
     "lan3.lanChannel":      "",
     "pppoeUser":            "",
     "pppoePassword":        "",
     "RestartDut":           "",
-    "RestartDutDelay":      "180",
+    "RestartDutDelay":      "",
     "testvar_group.lan2":   "",
     "testvar_group.lan3":   "",
     "wanInterface":         "",
-    "wanMode":              "DHCP",
-    "wanVlanId":            "1000",
+    "wanMode":              "",
+    "wanVlanId":            "",
     "supportsIPv6":         "",
-    "supportsCWMP":         "no",
+    "supportsCWMP":         "",
     "acsDefaultUser":       ""
         }
 
@@ -103,10 +103,14 @@ def cdrouter_configurator():
             testvars["wanInterface"] = "eth5"
             # shutdown all CPE and start the DUT and DSLAM
             testvars["RestartDut"] = "/home/qacafe/powercycle_VDSL.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
+            testvars["RestartDutDelay"] = 180
+            testvars["wanVlanId"] = 1000
         elif WAN_Type == "GE-WAN":
             testvars["wanInterface"] = DUT_dict["GE-WAN"]
             # shutdown all CPE and DSLAM and start the DUT
             testvars["RestartDut"] = "/home/qacafe/powercycle_GE-WAN.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
+            testvars["RestartDutDelay"] = 60
+            testvars["wanVlanId"] = 10
         else:
             print("ERROR")
 
@@ -223,6 +227,10 @@ def cdrouter_configurator():
         c.configs.edit_testvar("1072", Testvar(name='supportsIPv6', value=testvars['supportsIPv6']))
         print("...working...")
         c.configs.edit_testvar("1072", Testvar(name='lanInterface', value=testvars['lan.lanInterface']))
+        print("...working...")
+        c.configs.edit_testvar("1072", Testvar(name='lanSSID', value=testvars['lan.lanSSID']))
+        print("...working...")
+        c.configs.edit_testvar("1072", Testvar(name='wpaKey', value=testvars['lan.wpaKey']))
         print("...working...")
         c.configs.edit_testvar("1072", Testvar(name='lanSSID', group='lan2', value=testvars['lan2.lanSSID']))
         print("...working...")
