@@ -87,9 +87,7 @@ def cdrouter_configurator():
         testvars["lan.lanInterface"] = DUT_dict["LAN"]
         testvars["lan2.lanSSID"] = DUT_dict["SSID-5G"]
         testvars["lan.wpaKey"] = DUT_dict["WPA"]
-        testvars["lan2.lanBSSID"] = DUT_dict["AP-MAC-5G"]
         testvars["lan2.wpaKey"] = DUT_dict["WPA"]
-        testvars["lan3.lanBSSID"] = DUT_dict["AP-MAC-2G"]
         testvars["lan3.lanSSID"] = DUT_dict["SSID-2G"]
         testvars["lan3.wpaKey"] = DUT_dict["WPA"]
         testvars["lan3.lanChannel"] = DUT_dict["WPA"]
@@ -170,6 +168,15 @@ def cdrouter_configurator():
             testvars["lan2.lanSecurity"] = "WPA"
             testvars["lan3.lanSecurity"] = "WPA"
 
+#set testvars for topology
+        Topology = selected_options["Topology"]
+        if Topology == "MESH":
+            testvars["lan2.lanBSSID"] = DUT_dict["AP-MAC-5G"]
+            testvars["lan3.lanBSSID"] = DUT_dict["AP-MAC-2G"]
+        elif Topology == "GATEWAY":
+            testvars["lan2.lanBSSID"] = DUT_dict["GW-MAC-5G"]
+            testvars["lan3.lanBSSID"] = DUT_dict["GW-MAC-2G"]
+
 # generate config name
         config_name = "Python:"
         config_name = config_name + DUT_dict['DESCRIPTION'] + "_" + DUT_dict['GW-FIRMWARE'] + "_"
@@ -220,38 +227,47 @@ def cdrouter_configurator():
 # update testvar
         print("Updating testvars...")
         c.configs.edit_testvar("1072", Testvar(name='wanInterface', value=testvars['wanInterface']))
-        print("...working...")
+        print(f"...updated wanInterface {testvars['wanInterface']}...")
         c.configs.edit_testvar("1072", Testvar(name='wanMode', value=testvars['wanMode']))
-        print("...working...")
+        print(f"...updated wanMode {testvars['wanMode']}...")
+        c.configs.edit_testvar("1072", Testvar(name='wanVlanId', value=testvars['wanVlanId']))
+        print(f"...updated wanVlanId {testvars['wanVlanId']}...")
         c.configs.edit_testvar("1072", Testvar(name='RestartDut', value=testvars['RestartDut']))
-        print("...working...")
+        print(f"...updated RestartDutDelay {testvars['RestartDutDelay']}...")
+        c.configs.edit_testvar("1072", Testvar(name='RestartDut', value=testvars['RestartDut']))
+        print(f"...updated RestartDut {testvars['RestartDut']}...")
         c.configs.edit_testvar("1072", Testvar(name='supportsIPv6', value=testvars['supportsIPv6']))
-        print("...working...")
+        print(f"...updated supportsIPv6 {testvars['supportsIPv6']}...")
         c.configs.edit_testvar("1072", Testvar(name='lanInterface', value=testvars['lan.lanInterface']))
-        print("...working...")
+        print(f"...updated lanInterface {testvars['lan.lanInterface']}...")
         c.configs.edit_testvar("1072", Testvar(name='lanSSID', value=testvars['lan.lanSSID']))
-        print("...working...")
+        print(f"...updated lan.lanSSID {testvars['lan.lanSSID']}...")
         c.configs.edit_testvar("1072", Testvar(name='wpaKey', value=testvars['lan.wpaKey']))
-        print("...working...")
+        print(f"...updated wpaKey {testvars['lan.wpaKey']}...")
         c.configs.edit_testvar("1072", Testvar(name='lanSSID', group='lan2', value=testvars['lan2.lanSSID']))
-        print("...working...")
+        print(f"...updated lan2.lanSSID {testvars['lan2.lanSSID']}...")
         c.configs.edit_testvar("1072", Testvar(name='lanSSID', group='lan3', value=testvars['lan3.lanSSID']))
-        print("...working...")
+        print(f"...updated lan3.lanSSID {testvars['lan3.lanSSID']}...")
+        c.configs.edit_testvar("1072", Testvar(name='lanBSSID', group='lan2', value=testvars['lan2.lanBSSID']))
+        print(f"...updated lan2.lanBSSID {testvars['lan2.lanBSSID']}...")
+        c.configs.edit_testvar("1072", Testvar(name='lanBSSID', group='lan3', value=testvars['lan3.lanBSSID']))
+        print(f"...updated lan3.lanBSSID {testvars['lan3.lanBSSID']}...")
         c.configs.edit_testvar("1072", Testvar(name='wpaKey', group='lan2', value=testvars['lan2.wpaKey']))
-        print("...working...")
-        c.configs.edit_testvar("1072", Testvar(name='wpaKey', group='lan3', value=testvars['lan2.wpaKey']))
-        print("...working...")
+        print(f"...updated lan2.wpaKey {testvars['lan2.wpaKey']}...")
+        c.configs.edit_testvar("1072", Testvar(name='wpaKey', group='lan3', value=testvars['lan3.wpaKey']))
+        print(f"...updated lan3.wpaKey {testvars['lan3.wpaKey']}...")
         c.configs.edit_testvar("1072", Testvar(name='lanClients', group='lan2', value=testvars['lan2.lanClients']))
-        print("...working...")
+        print(f"...updated lan2.lanClients {testvars['lan2.lanClients']}...")
         c.configs.edit_testvar("1072", Testvar(name='lanInterface', group='lan2', value=testvars['lan2.lanInterface']))
-        print("...working...")
+        print(f"...updated lan2.lanInterface {testvars['lan2.lanInterface']}...")
         c.configs.edit_testvar("1072", Testvar(name='lanInterface', group='lan3', value=testvars['lan3.lanInterface']))
-        print("...working...")
+        print(f"...updated lan3.lanInterface {testvars['lan3.lanInterface']}...")
         c.configs.edit_testvar("1072", Testvar(name='lanSecurity', group='main', value=testvars['lan.lanSecurity']))
-        print("...working...")
+        print(f"...updated lan.lanSecurity {testvars['lan.lanSecurity']}...")
         c.configs.edit_testvar("1072", Testvar(name='lanSecurity', group='lan2', value=testvars['lan2.lanSecurity']))
-        print("...working...")
+        print(f"...updated lan2.lanSecurity {testvars['lan2.lanSecurity']}...")
         c.configs.edit_testvar("1072", Testvar(name='lanSecurity', group='lan3', value=testvars['lan3.lanSecurity']))
+        print(f"...updated lan3.lanSecurity {testvars['lan3.lanSecurity']}...")
 
         print("Finished updating testvars.")
 
