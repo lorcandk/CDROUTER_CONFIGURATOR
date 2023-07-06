@@ -6,10 +6,11 @@ To start with web front end:
 python ~/cdrouter_flask.py
 
 To use, browse to:
-ldkcloud.ddns.net:5000/CDROUTER_CONFIGURATOR
+#ldkcloud.ddns.net:5000/CDROUTER_CONFIGURATOR
+broadbandlab.ddns.net:5000/CDROUTER_CONFIGURATOR
 
 Select DUT# for the specific device under test.
-Data source for DUT parameters is DUT_parameters.csv
+Data source for DUT parameters is cdrouter_DUT.csv
 
 Select other test options.
 Submit.

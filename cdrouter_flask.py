@@ -94,6 +94,11 @@ def cdrouter_configurator():
         testvars["wanVlanId"] = DUT_dict["VLAN"]
         testvars["acsDefaultUser"] = "8020DA-" + str(DUT_dict["GW-SERIAL"])
 
+#create tag list
+        tag_list = list()
+        tag_list.append("python")
+        tag_list.append(DUT_dict["GW-NAME"])
+
 # set testvars for the WAN Type
         WAN_Type = selected_options["WAN Type"]
 
@@ -103,17 +108,20 @@ def cdrouter_configurator():
             testvars["RestartDut"] = "/home/qacafe/powercycle_VDSL.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
             testvars["RestartDutDelay"] = 180
             testvars["wanVlanId"] = 1000
+            tag_list.append("VDSL")
         elif WAN_Type == "GE-WAN":
             testvars["wanInterface"] = DUT_dict["GE-WAN"]
             # shutdown all CPE and DSLAM and start the DUT
             testvars["RestartDut"] = "/home/qacafe/powercycle_GE-WAN.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
             testvars["RestartDutDelay"] = 60
             testvars["wanVlanId"] = 10
+            tag_list.append("FTTH")
         else:
             print("ERROR")
 
 # set testvars for WAN mode
         testvars["wanMode"] = selected_options["WAN Mode"]
+        tag_list.append(testvars["wanMode"])
 
 # set testvars for CWMP
         testvars["supportsCWMP"] = selected_options["TR-069"]
@@ -134,6 +142,7 @@ def cdrouter_configurator():
             testvars["lan.lanSecurity"] = "NONE"
             testvars["lan2.lanInterface"] = "none"
             testvars["lan3.lanInterface"] = "none"
+            tag_list.append("LAN")
         elif Clients == "WLAN(.11ac)":
             testvars["lan.lanInterface"] = "wifi0-acn"
             testvars["lan.lanChannel"] = "auto"
@@ -143,6 +152,7 @@ def cdrouter_configurator():
             testvars["lan.lanSecurity"] = "WPA"
             testvars["lan2.lanInterface"] = "none"
             testvars["lan3.lanInterface"] = "none"
+            tag_list.append("WLAN")
         elif Clients == "WLAN(.11ax)":
             testvars["lan.lanInterface"] = "wifi1-ax"
             testvars["lan.lanChannel"] = "auto"
@@ -152,6 +162,7 @@ def cdrouter_configurator():
             testvars["lan.lanSecurity"] = "WPA"
             testvars["lan2.lanInterface"] = "none"
             testvars["lan3.lanInterface"] = "none"
+            tag_list.append("WLAN")
         elif Clients == "MULTI":
             testvars["lan.lanInterface"] = DUT_dict["LAN"]
             testvars["lan.lanSecurity"] = "NONE"
@@ -167,19 +178,22 @@ def cdrouter_configurator():
             testvars["lan3.wpaKey"] = DUT_dict["WPA"]
             testvars["lan2.lanSecurity"] = "WPA"
             testvars["lan3.lanSecurity"] = "WPA"
+            tag_list.append("LAN")
+            tag_list.append("WLAN")
 
 #set testvars for topology
         Topology = selected_options["Topology"]
         if Topology == "MESH":
             testvars["lan2.lanBSSID"] = DUT_dict["AP-MAC-5G"]
             testvars["lan3.lanBSSID"] = DUT_dict["AP-MAC-2G"]
+            tag_list.append("MESH")
         elif Topology == "GATEWAY":
             testvars["lan2.lanBSSID"] = DUT_dict["GW-MAC-5G"]
             testvars["lan3.lanBSSID"] = DUT_dict["GW-MAC-2G"]
 
 # generate config name
         config_name = "Python:"
-        config_name = config_name + DUT_dict['DESCRIPTION'] + "_" + DUT_dict['GW-FIRMWARE'] + "_"
+        config_name = config_name + DUT_dict['GW-NAME'] + "_" + DUT_dict['GW-FIRMWARE'] + "_"
         config_name = config_name + selected_options['WAN Type'] + "_"
         config_name = config_name + selected_options['WAN Mode'] + "_"
         config_name = config_name + selected_options['Topology'] + "_"
@@ -209,6 +223,10 @@ def cdrouter_configurator():
         config_notes = cfg_default.note
         config_notes = config_name + " - " + str(date.today()) + "\n" + config_notes
         c.configs.edit(Config(id='1072', note=config_notes))
+
+#update config tags
+        print(f"Updating tags in config {cfg_default.name} ...")
+        c.configs.edit(Config(id='1072', tags=tag_list))
 
 # create device
         dut_name = DUT_dict['GW-VENDOR'] + "_" + DUT_dict["GW-MODEL"] + "_" + DUT_dict["GW-FIRMWARE"]
