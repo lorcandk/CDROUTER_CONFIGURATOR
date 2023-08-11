@@ -73,7 +73,7 @@ testvars = {
         }
 
 
-@app.route('/cdrouter_configurator', methods=['GET', 'POST'])
+@app.route('/cdrouter_configurator_test', methods=['GET', 'POST'])
 @basic_auth.required
 def cdrouter_configurator_test():
     if request.method == 'POST' :
@@ -409,9 +409,8 @@ def cdrouter_configurator_test():
         return f"Launched package {pkg.name} with config {config_name}"
 
     else:
-        return render_template('cdrouter_configurator.html', options=options)
+        return render_template('cdrouter_configurator_test.html', options=options)
 
-app.run(debug=True, port=5000, host='0.0.0.0')
-
+app.run(debug=True, port=5001, host='0.0.0.0')
 
 
