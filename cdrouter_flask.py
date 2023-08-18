@@ -28,11 +28,11 @@ options = { "DUT": {"1": "DUT1", "2": "DUT2", "3": "DUT3", "4": "DUT4", "5": "DU
             "WAN Type": {"1": "VDSL", "2": "GE-WAN"},
             "WAN Mode": {"1": "DHCP", "2": "PPPoE"},
             "Topology": {"1": "GATEWAY", "2": "MESH"},
-              "Reboot": {"1": "Yes", "2": "No"},
-              "TR-069": {"1": "No", "2": "Yes"},
+              "Reboot": {"1": "yes", "2": "no"},
+              "TR-069": {"1": "no", "2": "yes"},
              "Clients": {"1": "LAN", "2": "WLAN(.11ac)", "3": "WLAN(.11ax)", "4": "MULTI"},
                 "IPv6": {"1": "yes", "2": "no"}, 
-                "Package": {"1": "Base", "2": "Sanity", "3": "Security", "4": "Performance/Stability"} }
+                "Package": {"1": "Base", "2": "Sanity", "3": "Security", "4": "Performance/Stability", "5": "DOS", "6": "Performance", "7": "Mgmt: TR-069"} }
                 
 # Define a dict for the testvars
 testvars = {
@@ -57,7 +57,6 @@ testvars = {
     "lan3.lanInterface":    "",
     "lan3.lanSSID":         "",
     "lan3.wpaKey":          "",
-    "lan3.lanChannel":      "",
     "pppoeUser":            "",
     "pppoePassword":        "",
     "RestartDut":           "",
@@ -69,6 +68,8 @@ testvars = {
     "wanVlanId":            "",
     "supportsIPv6":         "",
     "supportsCWMP":         "",
+    "tr69DownloadImage":    "",
+    "tr69DownloadOriginalImage":         "",
     "acsDefaultUser":       ""
         }
 
@@ -82,45 +83,44 @@ def cdrouter_configurator_test():
 # Get the DUT parameters
         DUT =selected_options["DUT"]
         DUT_dict = DUT_parameters_indexed.loc[:, DUT].to_dict()
-#        print(DUT_dict)
 # set testvars for the DUT
-#        testvars["RestartDut"] = "/home/qacafe/powercycle.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
         testvars["lan.lanInterface"] = DUT_dict["LAN"]
-        testvars["lan2.lanSSID"] = DUT_dict["SSID-5G"]
         testvars["lan.wpaKey"] = DUT_dict["WPA"]
+        testvars["lan2.lanSSID"] = DUT_dict["SSID-5G"]
         testvars["lan2.wpaKey"] = DUT_dict["WPA"]
         testvars["lan3.lanSSID"] = DUT_dict["SSID-2G"]
         testvars["lan3.wpaKey"] = DUT_dict["WPA"]
-        testvars["lan3.lanChannel"] = DUT_dict["WPA"]
         testvars["wanVlanId"] = DUT_dict["VLAN"]
-        testvars["acsDefaultUser"] = "8020DA-" + str(DUT_dict["GW-SERIAL"])
+        testvars["acsDefaultUser"] = DUT_dict["GW-OUI"] + "-" + DUT_dict["GW-SERIAL"]
+        testvars["tr69DownloadImage"] = "/home/qacafe/" + DUT_dict["GW-FW-MIRROR"]
+        testvars["tr69DownloadOriginalImage"] = "/home/qacafe/" + DUT_dict["GW-FW-IMAGE"]
 
 #create tag list
         tag_list = list()
         tag_list.append("python")
         tag_list.append(DUT_dict["GW-NAME"])
 
-# set testvars for the WAN Type
+# set testvars for the selected WAN Type
         WAN_Type = selected_options["WAN Type"]
 
         if WAN_Type == "VDSL":
             testvars["wanInterface"] = "eth5"
-            # shutdown all CPE and start the DUT and DSLAM
+            # shutdown all CPE and the WAN switch and start the DUT and DSLAM
             testvars["RestartDut"] = "/home/qacafe/powercycle_VDSL.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
             testvars["RestartDutDelay"] = 180
             testvars["wanVlanId"] = 1000
             tag_list.append("VDSL")
         elif WAN_Type == "GE-WAN":
             testvars["wanInterface"] = DUT_dict["GE-WAN"]
-            # shutdown all CPE and DSLAM and start the DUT
+            # shutdown all CPE and DSLAM and start the DUT and the WAN switch
             testvars["RestartDut"] = "/home/qacafe/powercycle_GE-WAN.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
-            testvars["RestartDutDelay"] = 60
+            testvars["RestartDutDelay"] = 90
             testvars["wanVlanId"] = 10
             tag_list.append("FTTH")
         else:
             print("ERROR")
 
-# set testvars for WAN mode
+# set testvars for the selected WAN mode
         testvars["wanMode"] = selected_options["WAN Mode"]
         tag_list.append(testvars["wanMode"])
 
@@ -133,7 +133,7 @@ def cdrouter_configurator_test():
 # set testvars for reboot
         Reboot = selected_options["Reboot"]
 
-        if Reboot == "No":
+        if Reboot == "no":
             testvars["RestartDut"] = ""
 
 #set testvar for number of clients
@@ -146,23 +146,27 @@ def cdrouter_configurator_test():
             tag_list.append("LAN")
         elif Clients == "WLAN(.11ac)":
             testvars["lan.lanInterface"] = "wifi0-acn"
-            testvars["lan.lanChannel"] = "auto"
+            testvars["lan.lanChannel"] = "5GHz"
             testvars["lan.lanClients"] = "1"
             testvars["lan.lanSSID"] = DUT_dict["SSID-5G"]
             testvars["lan.wpaKey"] = DUT_dict["WPA"]
             testvars["lan.lanSecurity"] = "WPA"
             testvars["lan2.lanInterface"] = "none"
             testvars["lan3.lanInterface"] = "none"
+            testvars["lan2.lanSecurity"] = "NONE"
+            testvars["lan3.lanSecurity"] = "NONE"
             tag_list.append("WLAN")
         elif Clients == "WLAN(.11ax)":
             testvars["lan.lanInterface"] = "wifi1-ax"
-            testvars["lan.lanChannel"] = "auto"
+            testvars["lan.lanChannel"] = "5GHz"
             testvars["lan.lanClients"] = "1"
             testvars["lan.lanSSID"] = DUT_dict["SSID-5G"]
             testvars["lan.wpaKey"] = DUT_dict["WPA"]
             testvars["lan.lanSecurity"] = "WPA"
             testvars["lan2.lanInterface"] = "none"
             testvars["lan3.lanInterface"] = "none"
+            testvars["lan2.lanSecurity"] = "NONE"
+            testvars["lan3.lanSecurity"] = "NONE"
             tag_list.append("WLAN")
         elif Clients == "MULTI":
             testvars["lan.lanInterface"] = DUT_dict["LAN"]
@@ -274,6 +278,9 @@ def cdrouter_configurator_test():
         c.configs.edit_testvar("1072", Testvar(name='wpaKey', value=testvars['lan.wpaKey']))
         print(f"...updated wpaKey {testvars['lan.wpaKey']}...")
 
+        c.configs.edit_testvar("1072", Testvar(name='lanChannel', value=testvars['lan.lanChannel']))
+        print(f"...updated lanChannel {testvars['lan.lanChannel']}...")
+
         c.configs.edit_testvar("1072", Testvar(name='lanSSID', group='lan2', value=testvars['lan2.lanSSID']))
         print(f"...updated lan2.lanSSID {testvars['lan2.lanSSID']}...")
 
@@ -295,6 +302,15 @@ def cdrouter_configurator_test():
         c.configs.edit_testvar("1072", Testvar(name='lanClients', group='lan2', value=testvars['lan2.lanClients']))
         print(f"...updated lan2.lanClients {testvars['lan2.lanClients']}...")
 
+        c.configs.edit_testvar("1072", Testvar(name='lanClients', group='lan3', value=testvars['lan3.lanClients']))
+        print(f"...updated lan3.lanClients {testvars['lan3.lanClients']}...")
+
+        c.configs.edit_testvar("1072", Testvar(name='lanChannel', group='lan2', value=testvars['lan2.lanChannel']))
+        print(f"...updated lan2.lanChannel {testvars['lan2.lanChannel']}...")
+
+        c.configs.edit_testvar("1072", Testvar(name='lanChannel', group='lan3', value=testvars['lan3.lanChannel']))
+        print(f"...updated lan3.lanChannel {testvars['lan3.lanChannel']}...")
+
         c.configs.edit_testvar("1072", Testvar(name='lanInterface', group='lan2', value=testvars['lan2.lanInterface']))
         print(f"...updated lan2.lanInterface {testvars['lan2.lanInterface']}...")
 
@@ -309,6 +325,18 @@ def cdrouter_configurator_test():
 
         c.configs.edit_testvar("1072", Testvar(name='lanSecurity', group='lan3', value=testvars['lan3.lanSecurity']))
         print(f"...updated lan3.lanSecurity {testvars['lan3.lanSecurity']}...")
+
+        c.configs.edit_testvar("1072", Testvar(name='tr69DownloadImage', value=testvars['tr69DownloadImage']))
+        print(f"...updated tr69DownloadImage {testvars['tr69DownloadImage']}...")
+
+        c.configs.edit_testvar("1072", Testvar(name='tr69DownloadOriginalImage', value=testvars['tr69DownloadOriginalImage']))
+        print(f"...updated tr69DownloadOriginalImage {testvars['tr69DownloadOriginalImage']}...")
+
+        c.configs.edit_testvar("1072", Testvar(name='supportsCWMP', value=testvars['supportsCWMP']))
+        print(f"...updated supportsCWMP {testvars['supportsCWMP']}...")
+
+        c.configs.edit_testvar("1072", Testvar(name='acsDefaultUser', value=testvars['acsDefaultUser']))
+        print(f"...updated acsDefaultUser {testvars['acsDefaultUser']}...")
 
         print("Finished updating testvars.")
 
@@ -340,12 +368,24 @@ def cdrouter_configurator_test():
         print(f"Sanity test package has {pkg_sanity.test_count} tests")
         tl_sanity = pkg_sanity.testlist
 
-        pkg_perf = c.packages.get_by_name("Performance/Stability")
-        print(f"Performance/Stability test package has {pkg_perf.test_count} tests")
+        pkg_perfstab = c.packages.get_by_name("Performance/Stability")
+        print(f"Performance/Stability test package has {pkg_perfstab.test_count} tests")
+        tl_perfstab = pkg_perfstab.testlist
+
+        pkg_dos = c.packages.get_by_name("DOS")
+        print(f"DOS test package has {pkg_dos.test_count} tests")
+        tl_dos = pkg_dos.testlist
+
+        pkg_perf = c.packages.get_by_name("Performance")
+        print(f"Performance test package has {pkg_perf.test_count} tests")
         tl_perf = pkg_perf.testlist
 
+        pkg_tr69 = c.packages.get_by_name("Mgmt: TR-069")
+        print(f"Mgmt: TR-069 test package has {pkg_tr69.test_count} tests")
+        tl_tr69 = pkg_tr69.testlist
+
 #get python base package
-        pkg = c.packages.get_by_name("Python Base")
+        pkg = c.packages.get_by_name("Python")
         pkg_opt=pkg.options
         pkg_opt.forever="true"
 
@@ -361,17 +401,33 @@ def cdrouter_configurator_test():
             pkg_opt.forever="false"
         elif pkg_option == "Sanity":
             tl=tl_sanity
-            pkg_tag_list.append("Sanity")
+            pkg_tag_list.append("SANITY")
             pkg_opt.forever="false"
         elif pkg_option == "Security":
             tl=tl_sec
-            pkg_tag_list.append("Security")
+            pkg_tag_list.append("SECURITY")
+            pkg_opt.forever="false"
+        elif pkg_option == "Performance":
+            tl=tl_perf
+            pkg_tag_list.append("PERFORMANCE")
             pkg_opt.forever="false"
         elif pkg_option == "Performance/Stability":
-            tl=tl_perf
-            pkg_tag_list.append("Performance")
-            pkg_tag_list.append("Stability")
+            tl=tl_perfstab
+            pkg_tag_list.append("PERFORMANCE")
+            pkg_tag_list.append("STABILITY")
             pkg_opt.forever="true"
+        elif pkg_option == "DOS":
+            tl=tl_dos
+            pkg_tag_list.append("DOS")
+            pkg_opt.forever="false"
+        elif pkg_option == "Performance":
+            tl=tl_perf
+            pkg_tag_list.append("PERFORMANCE")
+            pkg_opt.forever="false"
+        elif pkg_option == "Mgmt: TR-069":
+            tl=tl_tr69
+            pkg_tag_list.append("MGMT")
+            pkg_opt.forever="false"
 
         pkg_notes = pkg_option + " Package" + " - " + str(date.today()) 
 
