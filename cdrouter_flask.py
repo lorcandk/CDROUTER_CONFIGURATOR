@@ -104,14 +104,14 @@ def cdrouter_configurator_test():
         if WAN_Type == "VDSL":
             testvars["wanInterface"] = "eth5"
             # shutdown all CPE and the WAN switch and start the DUT and DSLAM
-            testvars["RestartDut"] = "/home/qacafe/powercycle_VDSL.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
+            testvars["RestartDut"] = "/home/qacafe/CDROUTER_POWERCYCLE/powercycle_VDSL.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
             testvars["RestartDutDelay"] = 180
             testvars["wanVlanId"] = 1000
             tag_list.append("VDSL")
         elif WAN_Type == "GE-WAN":
             testvars["wanInterface"] = DUT_dict["GE-WAN"]
             # shutdown all CPE and DSLAM and start the DUT and the WAN switch
-            testvars["RestartDut"] = "/home/qacafe/powercycle_GE-WAN2.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
+            testvars["RestartDut"] = "/home/qacafe/CDROUTER_POWERCYCLE/powercycle_GE-WAN.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
             testvars["RestartDutDelay"] = 90
             testvars["wanVlanId"] = 10
             tag_list.append("FTTH")
