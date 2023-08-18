@@ -28,7 +28,7 @@ options = { "DUT": {"1": "DUT1", "2": "DUT2", "3": "DUT3", "4": "DUT4", "5": "DU
             "WAN Type": {"1": "VDSL", "2": "GE-WAN"},
             "WAN Mode": {"1": "DHCP", "2": "PPPoE"},
             "Topology": {"1": "GATEWAY", "2": "MESH"},
-              "Reboot": {"1": "yes", "2": "no"},
+            "Reboot": {"1": "yes", "2": "no", "3": "quick"},
               "TR-069": {"1": "no", "2": "yes"},
              "Clients": {"1": "LAN", "2": "WLAN(.11ac)", "3": "WLAN(.11ax)", "4": "MULTI"},
                 "IPv6": {"1": "yes", "2": "no"}, 
@@ -92,8 +92,6 @@ def cdrouter_configurator_test():
         testvars["lan3.wpaKey"] = DUT_dict["WPA"]
         testvars["wanVlanId"] = DUT_dict["VLAN"]
         testvars["acsDefaultUser"] = DUT_dict["GW-OUI"] + "-" + DUT_dict["GW-SERIAL"]
-        testvars["tr69DownloadImage"] = "/home/qacafe/" + DUT_dict["GW-FW-MIRROR"]
-        testvars["tr69DownloadOriginalImage"] = "/home/qacafe/" + DUT_dict["GW-FW-IMAGE"]
 
 #create tag list
         tag_list = list()
@@ -113,7 +111,7 @@ def cdrouter_configurator_test():
         elif WAN_Type == "GE-WAN":
             testvars["wanInterface"] = DUT_dict["GE-WAN"]
             # shutdown all CPE and DSLAM and start the DUT and the WAN switch
-            testvars["RestartDut"] = "/home/qacafe/powercycle_GE-WAN.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
+            testvars["RestartDut"] = "/home/qacafe/powercycle_GE-WAN2.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
             testvars["RestartDutDelay"] = 90
             testvars["wanVlanId"] = 10
             tag_list.append("FTTH")
@@ -125,7 +123,12 @@ def cdrouter_configurator_test():
         tag_list.append(testvars["wanMode"])
 
 # set testvars for CWMP
-        testvars["supportsCWMP"] = selected_options["TR-069"]
+        tr69_option = selected_options["TR-069"]
+        testvars["supportsCWMP"] = tr69_option
+
+        if tr69_option == "yes":
+            testvars["tr69DownloadImage"] = "/home/qacafe/" + DUT_dict["GW-FW-MIRROR"]
+            testvars["tr69DownloadOriginalImage"] = "/home/qacafe/" + DUT_dict["GW-FW-IMAGE"]
 
 # set testvars for IPv6
         testvars["supportsIPv6"] = selected_options["IPv6"]
@@ -135,6 +138,8 @@ def cdrouter_configurator_test():
 
         if Reboot == "no":
             testvars["RestartDut"] = ""
+        elif Reboot == "quick":
+            testvars["RestartDut"] = "/home/qacafe/powercycle_QUICK.tcl 192.168.200.210 " + DUT_dict["PDU"] + " cyber cyber"
 
 #set testvar for number of clients
         Clients = selected_options["Clients"]
