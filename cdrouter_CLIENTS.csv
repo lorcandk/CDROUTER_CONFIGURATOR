@@ -1,0 +1,12 @@
+CLIENT,LAN,WiFi4 (2.4GHz),WiFi5 (5GHz),WiFi6 (2.4GHz),WiFi6 (5GHz),WiFi6e (6GHz),WiFi7 (MLO),MULTI
+Group,lan,lan2,lan3,lan4,lan5,lan7,lan8,MULTI
+lanInterface,eth10-10G,wifi1-ax24,wifi2-ax56,wifi3-ax24,wifi4-ax56,wifi6-ax56,wifi7-be,MULTI
+lanSecurity,NONE,WPA,WPA,WPA,WPA,WPA,WPA
+lanChannel,auto,2.4GHz,5GHz,2.4GHz,5GHz,6GHz,auto,MULTI
+lanClients,8,8,8,8,8,8,1,MULTI
+lan80211Phy,auto,n,ac,ax,ax,ax,auto,MULTI
+wpaKeyMgmt,auto,auto,auto,auto,auto,auto,auto,MULTI
+wpaCipher,auto,auto,auto,auto,auto,auto,auto,MULTI
+wpaGroupCipher,auto,auto,auto,auto,auto,auto,auto,MULTI
+wpaMode,auto,auto,auto,auto,auto,auto,auto,MULTI
+
