@@ -5,6 +5,7 @@ import sys
 import time
 import logging
 from datetime import date
+from flask import jsonify
 from cdrouter import CDRouter
 from cdrouter.configs import Testvar
 from cdrouter.configs import Config
@@ -39,7 +40,20 @@ app.logger.critical("Critical log info")
 
 basic_auth = BasicAuth(app)
 
-                
+# Define a dict to store the DUT options
+print(f"Defining options dict...")
+options = { 
+        "DUT": {"1": "DUT1", "2": "DUT2", "3": "DUT3", "4": "DUT4", "5": "DUT5", "6": "DUT6"},
+        "WAN Type": {"1": "VDSL", "2": "GE-WAN"},
+        "WAN Mode": {"1": "DHCP", "2": "PPPoE"},
+        "Topology": {"1": "GATEWAY", "2": "MESH"},
+        "Reboot": {"1": "yes", "2": "no"},
+        "TR-069": {"1": "no", "2": "yes"},
+        "Clients": {"1": "LAN", "2": "WiFi4 (2.4GHz)", "3": "WiFi5 (5GHz)", "4": "WiFi6 (2.4GHz)",  "5": "WiFi6 (5GHz)", "6": "WiFi6e (6GHz)", "7": "WiFi7 (MLO)", "9": "MULTI"},
+        "IPv6": {"1": "yes", "2": "no"}, 
+        "Package": {"1": "Base", "2": "Sanity", "3": "Security", "4": "Performance/Stability", "5": "DOS", "6": "Performance", "7": "Mgmt: TR-069"} 
+        }
+
 print(f"Waiting for form to be posted...")
 
 @app.route('/cdrouter_configurator', methods=['GET', 'POST'])
@@ -59,20 +73,6 @@ def cdrouter_configurator_test():
         print(f"Geting Config ID 3471 name...")
         cfg_default = c.configs.get(3471)
         print(f" Config 3471 is named {cfg_default.name}...")
-
-# Define a dict to store the DUT options
-        print(f"Defining options dict...")
-        options = { 
-        "DUT": {"1": "DUT1", "2": "DUT2", "3": "DUT3", "4": "DUT4", "5": "DUT5", "6": "DUT6"},
-        "WAN Type": {"1": "VDSL", "2": "GE-WAN"},
-        "WAN Mode": {"1": "DHCP", "2": "PPPoE"},
-        "Topology": {"1": "GATEWAY", "2": "MESH"},
-        "Reboot": {"1": "yes", "2": "no", "3": "quick"},
-        "TR-069": {"1": "no", "2": "yes"},
-        "Clients": {"1": "LAN", "2": "WiFi4 (2.4GHz)", "3": "WiFi5 (5GHz)", "4": "WiFi6 (2.4GHz)",  "5": "WiFi6 (5GHz)", "6": "WiFi6e (6GHz)", "7": "WiFi7 (MLO)", "9": "MULTI"},
-        "IPv6": {"1": "yes", "2": "no"}, 
-        "Package": {"1": "Base", "2": "Sanity", "3": "Security", "4": "Performance/Stability", "5": "DOS", "6": "Performance", "7": "Mgmt: TR-069"} 
-        }
 
 # Define a dict to store basic testvars
         print(f"Defining testvars_basic dict...")
@@ -233,7 +233,7 @@ def cdrouter_configurator_test():
         elif WAN_Type == "GE-WAN":
             testvars_wan["wanInterface"].value = DUT_dict["GE-WAN"]
 # shutdown all CPE and DSLAM and start the DUT and the WAN switch
-            testvars_basic["RestartDut"].value = "/home/qacafe/CDROUTER_POWERCYCLE/RGWResetServer.tcl " + DUT_dict["PDUv2"]
+#            testvars_basic["RestartDut"].value = "/home/qacafe/CDROUTER_POWERCYCLE/RGWResetServer.tcl " + DUT_dict["PDUv2"]
             testvars_basic["RestartDutDelay"].value = 90
             testvars_wan["wanVlanId"].value = 10
             tag_list.append("FTTH")
@@ -263,6 +263,9 @@ def cdrouter_configurator_test():
             testvars_basic["RestartDutDelay"].value = 60
         elif Reboot == "quick":
             testvars_basic["RestartDut"].value = "/home/qacafe/CDROUTER_POWERCYCLE/powercycle_QUICK.tcl 192.168.88.105 " + DUT_dict["PDU"] + " cyber cyber"
+        elif Reboot == "yes":
+            print(f"Device will be rebooted using the relay board {DUT_dict['PDUv2']} ...")
+            testvars_basic["RestartDut"].value = "/home/qacafe/CDROUTER_POWERCYCLE/RGWResetServer_ALLOFF_ON.tcl " + DUT_dict["PDUv2"]
 
 # Set testvars for the selected client
         Clients = selected_options["Clients"]
@@ -506,6 +509,7 @@ def cdrouter_configurator_test():
 # Set testvars for topology
         Topology = selected_options["Topology"]
         if Topology == "MESH":
+            testvars_lan["lan.lanBSSID"].value = DUT_dict["AP-MAC-2G"]
             testvars_lan["lan2.lanBSSID"].value = DUT_dict["AP-MAC-2G"]
             testvars_lan["lan3.lanBSSID"].value = DUT_dict["AP-MAC-5G"]
             testvars_lan["lan4.lanBSSID"].value = DUT_dict["AP-MAC-2G"]
@@ -692,6 +696,23 @@ def cdrouter_configurator_test():
 
     else:
         return render_template('cdrouter_configurator.html', options=options)
+
+@app.route('/get_dut_attributes')
+@basic_auth.required
+def get_dut_attributes():
+    dut = request.args.get("dut")
+
+    if dut not in DUT_parameters_indexed.columns:
+        return jsonify({"error": f"Unknown DUT: {dut}"}), 404
+
+    dut_data = (
+        DUT_parameters_indexed[dut]
+        .where(DUT_parameters_indexed[dut].notna(), None)
+        .to_dict()
+    )
+
+    return jsonify(dut_data)
+
 
 app.run(debug=True, port=5000, host='0.0.0.0')
 
