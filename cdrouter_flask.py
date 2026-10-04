@@ -270,65 +270,126 @@ def cdrouter_configurator_test():
 # Set testvars for the selected client
         Clients = selected_options["Clients"]
 
-        testvars_lan["lan.lanClients"].value  = "1"
-        testvars_lan["lan.lanInterface"].value  = CLIENT_dict["lanInterface"]
-        testvars_lan["lan.lanChannel"].value  = CLIENT_dict["lanChannel"]
-        testvars_lan["lan.lan80211Phy"].value  = CLIENT_dict["lan80211Phy"]
-        testvars_lan["lan.wpaKeyMgmt"].value  = CLIENT_dict["wpaKeyMgmt"]
-        testvars_lan["lan.wpaCipher"].value  = CLIENT_dict["wpaCipher"]
-        testvars_lan["lan.wpaGroupCipher"].value  = CLIENT_dict["wpaGroupCipher"]
-        testvars_lan["lan.wpaMode"].value  = CLIENT_dict["wpaMode"]
-        testvars_lan["lan.lanSecurity"].value  = CLIENT_dict["lanSecurity"]
-
 
         if Clients == "LAN":
             print(f"Using LAN Client ...")
+            testvars_lan["lan.lanInterface"].value  = CLIENT_dict["lanInterface"]
+            testvars_lan["lan.lanSecurity"].value  = CLIENT_dict["lanSecurity"]
+            testvars_lan["lan.lanClients"].value  = "1"
+            
             tag_list.append("LAN")
 
         elif Clients == "WiFi4 (2.4GHz)":
             print(f"Using WiFi4 (2.4GHz)  Client ...")
+            
             testvars_lan["lan.lanSSID"].value  = DUT_dict["SSID-2G"]
             testvars_lan["lan.wpaKey"].value  = DUT_dict["WPA"]
+
+            testvars_lan["lan.lanInterface"].value  = CLIENT_dict["lanInterface"]
+            testvars_lan["lan.lanSecurity"].value  = CLIENT_dict["lanSecurity"]
+            testvars_lan["lan.lanClients"].value  = "1"
+            testvars_lan["lan.lanChannel"].value  = CLIENT_dict["lanChannel"]
+            testvars_lan["lan.lan80211Phy"].value  = CLIENT_dict["lan80211Phy"]
+            testvars_lan["lan.wpaKeyMgmt"].value  = CLIENT_dict["wpaKeyMgmt"]
+            testvars_lan["lan.wpaCipher"].value  = CLIENT_dict["wpaCipher"]
+            testvars_lan["lan.wpaGroupCipher"].value  = CLIENT_dict["wpaGroupCipher"]
+            testvars_lan["lan.wpaMode"].value  = CLIENT_dict["wpaMode"]
+            
             tag_list.append("WLAN")
             tag_list.append("WiFi4")
             tag_list.append("2.4GHz")
 
         elif Clients == "WiFi5 (5GHz)":
             print(f"Using WiFi5 (5GHz)  Client ...")
+
             testvars_lan["lan.lanSSID"].value  = DUT_dict["SSID-5G"]
             testvars_lan["lan.wpaKey"].value  = DUT_dict["WPA"]
+
+            testvars_lan["lan.lanInterface"].value  = CLIENT_dict["lanInterface"]
+            testvars_lan["lan.lanSecurity"].value  = CLIENT_dict["lanSecurity"]
+            testvars_lan["lan.lanClients"].value  = "1"
+            testvars_lan["lan.lanChannel"].value  = CLIENT_dict["lanChannel"]
+            testvars_lan["lan.lan80211Phy"].value  = CLIENT_dict["lan80211Phy"]
+            testvars_lan["lan.wpaKeyMgmt"].value  = CLIENT_dict["wpaKeyMgmt"]
+            testvars_lan["lan.wpaCipher"].value  = CLIENT_dict["wpaCipher"]
+            testvars_lan["lan.wpaGroupCipher"].value  = CLIENT_dict["wpaGroupCipher"]
+
             tag_list.append("WLAN")
             tag_list.append("WiFi5")
             tag_list.append("5GHz")
 
         elif Clients == "WiFi6 (2.4GHz)":
             print(f"Using WiFi6 (2.4GHz)  Client ...")
+            
             testvars_lan["lan.lanSSID"].value  = DUT_dict["SSID-2G"]
             testvars_lan["lan.wpaKey"].value  = DUT_dict["WPA"]
+
+            testvars_lan["lan.lanInterface"].value  = CLIENT_dict["lanInterface"]
+            testvars_lan["lan.lanSecurity"].value  = CLIENT_dict["lanSecurity"]
+            testvars_lan["lan.lanClients"].value  = "1"
+            testvars_lan["lan.lanChannel"].value  = CLIENT_dict["lanChannel"]
+            testvars_lan["lan.lan80211Phy"].value  = CLIENT_dict["lan80211Phy"]
+            testvars_lan["lan.wpaKeyMgmt"].value  = CLIENT_dict["wpaKeyMgmt"]
+            testvars_lan["lan.wpaCipher"].value  = CLIENT_dict["wpaCipher"]
+            testvars_lan["lan.wpaGroupCipher"].value  = CLIENT_dict["wpaGroupCipher"]
+            
             tag_list.append("WLAN")
             tag_list.append("WiFi6")
             tag_list.append("2.4GHz")
 
         elif Clients == "WiFi6 (5GHz)":
             print(f"Using WiFi6 (5GHz)  Client ...")
+
             testvars_lan["lan.lanSSID"].value  = DUT_dict["SSID-5G"]
             testvars_lan["lan.wpaKey"].value  = DUT_dict["WPA"]
+
+            testvars_lan["lan.lanInterface"].value  = CLIENT_dict["lanInterface"]
+            testvars_lan["lan.lanSecurity"].value  = CLIENT_dict["lanSecurity"]
+            testvars_lan["lan.lanClients"].value  = "1"
+            testvars_lan["lan.lanChannel"].value  = CLIENT_dict["lanChannel"]
+            testvars_lan["lan.lan80211Phy"].value  = CLIENT_dict["lan80211Phy"]
+            testvars_lan["lan.wpaKeyMgmt"].value  = CLIENT_dict["wpaKeyMgmt"]
+            testvars_lan["lan.wpaCipher"].value  = CLIENT_dict["wpaCipher"]
+            testvars_lan["lan.wpaGroupCipher"].value  = CLIENT_dict["wpaGroupCipher"]
+            
             tag_list.append("WLAN")
             tag_list.append("WiFi6")
             tag_list.append("5GHz")
 
         elif Clients == "WiFi6e (6GHz)":
             print(f"Using WiFi6e (6GHz)  Client ...")
+
             testvars_lan["lan.lanSSID"].value  = DUT_dict["SSID-6G"]
             testvars_lan["lan.wpaKey"].value  = DUT_dict["WPA"]
+
+            testvars_lan["lan.lanInterface"].value  = CLIENT_dict["lanInterface"]
+            testvars_lan["lan.lanSecurity"].value  = CLIENT_dict["lanSecurity"]
+            testvars_lan["lan.lanClients"].value  = "1"
+            testvars_lan["lan.lanChannel"].value  = CLIENT_dict["lanChannel"]
+            testvars_lan["lan.lan80211Phy"].value  = CLIENT_dict["lan80211Phy"]
+            testvars_lan["lan.wpaKeyMgmt"].value  = CLIENT_dict["wpaKeyMgmt"]
+            testvars_lan["lan.wpaCipher"].value  = CLIENT_dict["wpaCipher"]
+            testvars_lan["lan.wpaGroupCipher"].value  = CLIENT_dict["wpaGroupCipher"]
+            
             tag_list.append("WLAN")
             tag_list.append("WiFi6e")
             tag_list.append("6GHz")
 
         elif Clients == "WiFi7 (MLO)":
             print(f"Using WiFi7 (MLO) Client ...")
+
             testvars_lan["lan.lanSSID"].value  = DUT_dict["SSID-MLO"]
             testvars_lan["lan.wpaKey"].value  = DUT_dict["WPA"]
+
+            testvars_lan["lan.lanInterface"].value  = CLIENT_dict["lanInterface"]
+            testvars_lan["lan.lanSecurity"].value  = CLIENT_dict["lanSecurity"]
+            testvars_lan["lan.lanClients"].value  = "1"
+            testvars_lan["lan.lanChannel"].value  = CLIENT_dict["lanChannel"]
+            testvars_lan["lan.lan80211Phy"].value  = CLIENT_dict["lan80211Phy"]
+            testvars_lan["lan.wpaKeyMgmt"].value  = CLIENT_dict["wpaKeyMgmt"]
+            testvars_lan["lan.wpaCipher"].value  = CLIENT_dict["wpaCipher"]
+            testvars_lan["lan.wpaGroupCipher"].value  = CLIENT_dict["wpaGroupCipher"]
+
             tag_list.append("WLAN")
             tag_list.append("WiFi7")
             tag_list.append("MLO")
@@ -336,175 +397,95 @@ def cdrouter_configurator_test():
         elif Clients == "MULTI":
             print(f"Using multiple Clients ...")
             multi_clients = request.form.getlist("multi_clients")
-           
-            print(multi_clients)
-            if "LAN" in multi_clients:
-                print(f"Updating LAN interface ...")
+          
+            print(f"Selected clients: {multi_clients}")
 
-                CLIENT = "LAN"
+            interface_num = 1
+
+            for CLIENT in multi_clients:
+
                 CLIENT_dict = CLIENT_parameters_indexed.loc[:, CLIENT].to_dict()
 
-                testvars_lan["lan.lanInterface"].value = DUT_dict["LAN"]
+                def get_interface_name(interface_num):
+                    if interface_num == 1:
+                        return "lan"
+                    return f"lan{interface_num}"
 
-                testvars_lan["lan.lanClients"].value = CLIENT_dict["lanClients"]
-                testvars_lan["lan.lanChannel"].value  = CLIENT_dict["lanChannel"]
-                testvars_lan["lan.lan80211Phy"].value  = CLIENT_dict["lan80211Phy"]
-                testvars_lan["lan.lanClients"].value  = CLIENT_dict["lanClients"]
-                testvars_lan["lan.wpaKeyMgmt"].value  = CLIENT_dict["wpaKeyMgmt"]
-                testvars_lan["lan.wpaCipher"].value  = CLIENT_dict["wpaCipher"]
-                testvars_lan["lan.wpaGroupCipher"].value  = CLIENT_dict["wpaGroupCipher"]
-                testvars_lan["lan.wpaMode"].value  = CLIENT_dict["wpaMode"]
-                testvars_lan["lan.lanSecurity"].value  = CLIENT_dict["lanSecurity"]
+                #current_interface = f"lan{interface_num}"
+                current_interface = get_interface_name(interface_num)
 
-                tag_list.append("LAN")
+                print(f"Updating {CLIENT} -> {current_interface}")
 
-            if "WiFi4 (2.4GHz)" in multi_clients:
-                print(f"Updating WiFi4 (2.4GHz) interface ...")
+                #print(f"Updating {CLIENT_dict['lanInterface']}... ")
 
-                CLIENT = "WiFi4 (2.4GHz)"
-                CLIENT_dict = CLIENT_parameters_indexed.loc[:, CLIENT].to_dict()
+                testvars_lan[f"{current_interface}.lanSSID"].value = DUT_dict["SSID"]
+                testvars_lan[f"{current_interface}.wpaKey"].value = DUT_dict["WPA"]
 
-                testvars_lan["lan2.lanSSID"].value = DUT_dict["SSID-2G"]
-                testvars_lan["lan2.wpaKey"].value = DUT_dict["WPA"]
+                testvars_lan[f"{current_interface}.lanInterface"].value = CLIENT_dict["lanInterface"]
+                testvars_lan[f"{current_interface}.lanClients"].value = CLIENT_dict["lanClients"]
+                testvars_lan[f"{current_interface}.lanSecurity"].value = CLIENT_dict["lanSecurity"]
+                testvars_lan[f"{current_interface}.lanChannel"].value = CLIENT_dict["lanChannel"]
+                testvars_lan[f"{current_interface}.lan80211Phy"].value = CLIENT_dict["lan80211Phy"]
+                testvars_lan[f"{current_interface}.wpaKeyMgmt"].value = CLIENT_dict["wpaKeyMgmt"]
+                testvars_lan[f"{current_interface}.wpaCipher"].value = CLIENT_dict["wpaCipher"]
+                testvars_lan[f"{current_interface}.wpaGroupCipher"].value = CLIENT_dict["wpaGroupCipher"]
+                testvars_lan[f"{current_interface}.wpaMode"].value = CLIENT_dict["wpaMode"]
+                
+                interface_num += 1
 
-                testvars_lan["lan2.lanClients"].value = CLIENT_dict["lanClients"]
-                testvars_lan["lan2.lanInterface"].value  = CLIENT_dict["lanInterface"]
-                testvars_lan["lan2.lanChannel"].value  = CLIENT_dict["lanChannel"]
-                testvars_lan["lan2.lan80211Phy"].value  = CLIENT_dict["lan80211Phy"]
-                testvars_lan["lan2.lanClients"].value  = CLIENT_dict["lanClients"]
-                testvars_lan["lan2.wpaKeyMgmt"].value  = CLIENT_dict["wpaKeyMgmt"]
-                testvars_lan["lan2.wpaCipher"].value  = CLIENT_dict["wpaCipher"]
-                testvars_lan["lan2.wpaGroupCipher"].value  = CLIENT_dict["wpaGroupCipher"]
-                testvars_lan["lan2.wpaMode"].value  = CLIENT_dict["wpaMode"]
-                testvars_lan["lan2.lanSecurity"].value  = CLIENT_dict["lanSecurity"]
 
-                tag_list.append("WLAN")
-                tag_list.append("WiFi4")
-                tag_list.append("2.4GHz")
+                if CLIENT == "LAN":
 
-            if "WiFi5 (5GHz)" in multi_clients:
-                print(f"Updating WiFi5 (5GHz) interface ...")
+                    print(f"Updating LAN interface ...")
 
-                CLIENT = "WiFi5 (5GHz)"
-                CLIENT_dict = CLIENT_parameters_indexed.loc[:, CLIENT].to_dict()
+                    testvars_lan[f"{current_interface}.lanInterface"].value = DUT_dict["LAN"]
+                    testvars_lan[f"{current_interface}.lanSSID"].value = ""
+                    testvars_lan[f"{current_interface}.wpaKey"].value = ""
 
-                testvars_lan["lan3.lanSSID"].value = DUT_dict["SSID-5G"]
-                testvars_lan["lan3.wpaKey"].value = DUT_dict["WPA"]
+                    tag_list.append("LAN")
 
-                testvars_lan["lan3.lanClients"].value = CLIENT_dict["lanClients"]
-                testvars_lan["lan3.lanInterface"].value  = CLIENT_dict["lanInterface"]
-                testvars_lan["lan3.lanChannel"].value  = CLIENT_dict["lanChannel"]
-                testvars_lan["lan3.lan80211Phy"].value  = CLIENT_dict["lan80211Phy"]
-                testvars_lan["lan3.lanClients"].value  = CLIENT_dict["lanClients"]
-                testvars_lan["lan3.wpaKeyMgmt"].value  = CLIENT_dict["wpaKeyMgmt"]
-                testvars_lan["lan3.wpaCipher"].value  = CLIENT_dict["wpaCipher"]
-                testvars_lan["lan3.wpaGroupCipher"].value  = CLIENT_dict["wpaGroupCipher"]
-                testvars_lan["lan3.wpaMode"].value  = CLIENT_dict["wpaMode"]
-                testvars_lan["lan3.lanSecurity"].value  = CLIENT_dict["lanSecurity"]
+                if CLIENT == "WiFi4 (2.4GHz)":
+                    print(f"Updating WiFi4 (2.4GHz) interface ...")
 
-                tag_list.append("WLAN")
-                tag_list.append("WiFi5")
-                tag_list.append("5GHz")
+                    tag_list.append("WLAN")
+                    tag_list.append("WiFi4")
+                    tag_list.append("2.4GHz")
 
-            if "WiFi6 (2.4GHz)" in multi_clients:
-                print(f"Updating WiFi6 (2.4GHz) interface ...")
+                if CLIENT == "WiFi5 (5GHz)":
+                    print(f"Updating WiFi5 (5GHz) interface ...")
 
-                CLIENT = "WiFi6 (2.4GHz)"
-                CLIENT_dict = CLIENT_parameters_indexed.loc[:, CLIENT].to_dict()
+                    tag_list.append("WLAN")
+                    tag_list.append("WiFi5")
+                    tag_list.append("5GHz")
 
-                testvars_lan["lan4.lanSSID"].value = DUT_dict["SSID-2G"]
-                testvars_lan["lan4.wpaKey"].value = DUT_dict["WPA"]
+                if CLIENT == "WiFi6 (2.4GHz)":
+                    print(f"Updating WiFi6 (2.4GHz) interface ...")
 
-                testvars_lan["lan4.lanClients"].value = CLIENT_dict["lanClients"]
-                testvars_lan["lan4.lanInterface"].value  = CLIENT_dict["lanInterface"]
-                testvars_lan["lan4.lanChannel"].value  = CLIENT_dict["lanChannel"]
-                testvars_lan["lan4.lan80211Phy"].value  = CLIENT_dict["lan80211Phy"]
-                testvars_lan["lan4.lanClients"].value  = CLIENT_dict["lanClients"]
-                testvars_lan["lan4.wpaKeyMgmt"].value  = CLIENT_dict["wpaKeyMgmt"]
-                testvars_lan["lan4.wpaCipher"].value  = CLIENT_dict["wpaCipher"]
-                testvars_lan["lan4.wpaGroupCipher"].value  = CLIENT_dict["wpaGroupCipher"]
-                testvars_lan["lan4.wpaMode"].value  = CLIENT_dict["wpaMode"]
-                testvars_lan["lan4.lanSecurity"].value  = CLIENT_dict["lanSecurity"]
+                    tag_list.append("WLAN")
+                    tag_list.append("WiFi6")
+                    tag_list.append("2.4GHz")
 
-                tag_list.append("WLAN")
-                tag_list.append("WiFi6")
-                tag_list.append("2.4GHz")
+                if CLIENT == "WiFi6 (5GHz)":
+                    print(f"Updating WiFi6 (5GHz) interface ...")
 
-            if "WiFi6 (5GHz)" in multi_clients:
-                print(f"Updating WiFi6 (5GHz) interface ...")
+                    tag_list.append("WLAN")
+                    tag_list.append("WiFi6")
+                    tag_list.append("5GHz")
 
-                CLIENT = "WiFi6 (5GHz)"
-                CLIENT_dict = CLIENT_parameters_indexed.loc[:, CLIENT].to_dict()
-
-                testvars_lan["lan5.lanSSID"].value = DUT_dict["SSID-5G"]
-                testvars_lan["lan5.wpaKey"].value = DUT_dict["WPA"]
-
-                testvars_lan["lan5.lanClients"].value = CLIENT_dict["lanClients"]
-                testvars_lan["lan5.lanInterface"].value  = CLIENT_dict["lanInterface"]
-                testvars_lan["lan5.lanChannel"].value  = CLIENT_dict["lanChannel"]
-                testvars_lan["lan5.lan80211Phy"].value  = CLIENT_dict["lan80211Phy"]
-                testvars_lan["lan5.lanClients"].value  = CLIENT_dict["lanClients"]
-                testvars_lan["lan5.wpaKeyMgmt"].value  = CLIENT_dict["wpaKeyMgmt"]
-                testvars_lan["lan5.wpaCipher"].value  = CLIENT_dict["wpaCipher"]
-                testvars_lan["lan5.wpaGroupCipher"].value  = CLIENT_dict["wpaGroupCipher"]
-                testvars_lan["lan5.wpaMode"].value  = CLIENT_dict["wpaMode"]
-                testvars_lan["lan5.lanSecurity"].value  = CLIENT_dict["lanSecurity"]
-
-                tag_list.append("WLAN")
-                tag_list.append("WiFi6")
-                tag_list.append("5GHz")
-
-#WiFi-6e 6GHz adapter
-            if DUT_BANDS=="TRI":
-                print(f"Device is Tri-band ...")
-                if "WiFi6e (6GHz)" in multi_clients:
+                if CLIENT == "WiFi6e (6GHz)":
                     print(f"Updating 6GHz interface ...")
-
-                    CLIENT = "WiFi6e (6GHz)"
-                    CLIENT_dict = CLIENT_parameters_indexed.loc[:, CLIENT].to_dict()
-
-                    testvars_lan["lan7.lanSSID"].value = DUT_dict["SSID-6G"]
-                    testvars_lan["lan7.wpaKey"].value = DUT_dict["WPA"]
-
-                    testvars_lan["lan7.lanClients"].value = CLIENT_dict["lanClients"]
-                    testvars_lan["lan7.lanInterface"].value  = CLIENT_dict["lanInterface"]
-                    testvars_lan["lan7.lanChannel"].value  = CLIENT_dict["lanChannel"]
-                    testvars_lan["lan7.lan80211Phy"].value  = CLIENT_dict["lan80211Phy"]
-                    testvars_lan["lan7.lanClients"].value  = CLIENT_dict["lanClients"]
-                    testvars_lan["lan7.wpaKeyMgmt"].value  = CLIENT_dict["wpaKeyMgmt"]
-                    testvars_lan["lan7.wpaCipher"].value  = CLIENT_dict["wpaCipher"]
-                    testvars_lan["lan7.wpaGroupCipher"].value  = CLIENT_dict["wpaGroupCipher"]
-                    testvars_lan["lan7.wpaMode"].value  = CLIENT_dict["wpaMode"]
-                    testvars_lan["lan7.lanSecurity"].value  = CLIENT_dict["lanSecurity"]
 
                     tag_list.append("WLAN")
                     tag_list.append("WiFi6e")
                     tag_list.append("6GHz")
 
-            if "WiFi7 (MLO)" in multi_clients:
+                if CLIENT == "WiFi7 (MLO)":
 #WiFi-7 tri-band adapter
-                print(f"Updating WiFi7 (MLO) interface ...")
+                    print(f"Updating WiFi7 (MLO) interface ...")
 
-                CLIENT = "WiFi7 (MLO)"
-                CLIENT_dict = CLIENT_parameters_indexed.loc[:, CLIENT].to_dict()
-
-                testvars_lan["lan8.lanSSID"].value = DUT_dict["SSID-MLO"]
-                testvars_lan["lan8.wpaKey"].value = DUT_dict["WPA"]
-
-                testvars_lan["lan8.lanClients"].value = CLIENT_dict["lanClients"]
-                testvars_lan["lan8.lanInterface"].value  = CLIENT_dict["lanInterface"]
-                testvars_lan["lan8.lanChannel"].value  = CLIENT_dict["lanChannel"]
-                testvars_lan["lan8.lan80211Phy"].value  = CLIENT_dict["lan80211Phy"]
-                testvars_lan["lan8.lanClients"].value  = CLIENT_dict["lanClients"]
-                testvars_lan["lan8.wpaKeyMgmt"].value  = CLIENT_dict["wpaKeyMgmt"]
-                testvars_lan["lan8.wpaCipher"].value  = CLIENT_dict["wpaCipher"]
-                testvars_lan["lan8.wpaGroupCipher"].value  = CLIENT_dict["wpaGroupCipher"]
-                testvars_lan["lan8.wpaMode"].value  = CLIENT_dict["wpaMode"]
-                testvars_lan["lan8.lanSecurity"].value  = CLIENT_dict["lanSecurity"]
-
-                tag_list.append("WLAN")
-                tag_list.append("WiFi7")
-                tag_list.append("MLO")
+                    tag_list.append("WLAN")
+                    tag_list.append("WiFi7")
+                    tag_list.append("MLO")
 
 # Set testvars for topology
         Topology = selected_options["Topology"]
